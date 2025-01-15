@@ -1,63 +1,73 @@
-# Customized scripts of CHOP NICU analysis
-## Hierarchical Clustering using Silhouette Scores
+# 
+## Genome assembly and quality control
+Raw sequencing reads were subjected to quality control using Sunbeam (v4.3.7), which performed adapter trimming and host genome decontamination. Genome assembly was carried out using the following tools:
 
-The customized script ```Hierarchical_Clustering.R``` uses the core-genome phylogenetic tree to partition all genomes into different groups. All possible grouping pattern, which range from 2 groups to (tip number - 1) groups.  The grouping pattern with the highest average silhouette scores is the final group. 
+- SPAdes (v3.15.5) for isolate genomes.
+- Anvi’o (v8) pipeline with MEGAHIT (v1.2.9) for 102 metagenomic samples.
 
-These groups are selected for downstream analysis based on two criteria: they contained at least 2 genomes, and the minimal SNP distance among genomes within the group was below 500. The genomes in the remaining 5 groups, which did not meet the criteria for fine-grained analysis, were considered singletons.
+Assembly quality was assessed using CheckM, applying the following criteria:
+- ≥95% CheckM completeness
+- ≤5% CheckM contamination
+Lineage classification as "Staphylococcus (UID301)"
 
-### Flags
-```
-Rscript Hierarchical_Clustering.R --tree /path/to/core-genome/phylogenetic/tree --matrix /path/to/snp/distance/matrix
-```
+To evaluate species-level contamination, Mash was used. Assemblies were filtered to retain only those between 2.55 Mb and 3.15 Mb in size. Of the 1,670 assembled genomes, 1,446 passed the quality control criteria and were included in downstream analyses.
 
-- --tree: This flag takes the newick format of the core-genome phylogenetic tree.
+## Determination of clonality 
+### Clonality Determination
+Clonality was determined using a multi-step approach:
+- Hierarchical Clustering: Genomes were stratified into distinct groups.
+- Single-Linkage Clustering (SLC): Iterative SLC identified closely related genomes across SNP thresholds (minimum pairwise distance in the group to 500 SNPs).
+- Phylogenetic Correction: Strain compositions were validated and corrected using reference-based maximum likelihood phylogenies. The compositions were expanded to include the smallest monophyletic clade with robust bootstrap support (≥70%).
+- SNP Threshold Finilization: Final thresholds were determined where cluster composition and number plateaued.
   
-In our analysis, our tree is namaed "NICU_core_genome.contree"
+This method ensured robust identification and validation of clonal relationships across the dataset.
 
-- --matrix: For now, this flag takes the RDS file that saves a single R object containing the SNP matrix.
+
+### Multi-SNP-Threshold Plot
+These plots visualize the following metrics at each tested SNP threshold:
+
+- Number of clones and singletons.
+- Number of discrepant genomes observed when SNP-only strain composition was mapped to the phylogeny.
+- Bootstrap support for the strain compositions.
   
-In our analysis, the RDS file is "NICU_snp_matrix.RDS"
-### Ouput
-The output is the csv file with each row indicating the genome name and the group ID. 
-- Output ```all_hierarchical_clustering_groups.csv```: This shows all groups including singletons 
-- Output ```selected_hierarchical_clustering_groups.csv```: This shows only groups that meet the criteria described previsouly.
-- Output ```singletons_hierarchical_clustering_groups.csv```: This shows only the singletons
-### Reference
-- [TreeTools](https://ms609.github.io/TreeTools/) 
-- [ape](https://emmanuelparadis.github.io/) 
-- [dplyr](https://github.com/tidyverse/dplyr) 
-- [cluster](https://svn.r-project.org/R-packages/trunk/cluster/)
+This approach ensures a comprehensive view of clonality across varying thresholds.
 
-  
-## Strain Determination
-The script ```Strain_Determination.R``` takes the ```all_hierarchical_clustering_groups.csv``` produced by by ```Hierarchical_Clustering.R```, and only analyzed groups that meet the criteria described previsouly.
-A single linkage clustering (SLC) algorithm is then used to determine closely related strains at every possible potential SNP threshold ranging from the minimal SNP distance in the group to the max threshold user defines. The output from SLC is then corrected for phylogenetic structure. The SNP threshold at which the number and composition of strains plateaued is selected to determine strains. If no plateau is found, the max threshold defined previously would be used to determine the strains for this group.
+## Cluster analysis and visualizations
+### Swimmer plot
+This plot provides a temporal analysis of transmission clusters based on patient location and treatment team assignments:
+- Patient Timelines: NICU section assignments are represented as colored rectangles. Admission dates are marked by triangles, and discharge dates by squares.
+- Treatment Team Assignments: Shown as colored rectangles over time, corresponding to each patient’s timeline.
 
-### Flags
-- --subtrees: The path to directoy containing reference-based whole-genome phylogenetic trees of each selected groups.(For now the script only takes the trees built by IQtree with .contree extension, and the name of the tree should be "Group" + Group ID, like "Group1.contree")
-- --matrix: The RDS file containing the SNP matrix. In our analysis, the RDS file is "NICU_snp_matrix.RDS".
-- --cores: How many cores would be used for this analysis. Default is all cores available.
-- --max_threshold: The max SNP threshold that the analysis used to determine strains.
-- --plateau_length: The length of plateau for determining strains.
-- --groups: ```all_hierarchical_clustering_groups.csv``` produced by ```Hierarchical_Clustering.R```.
-- --output: The path to the output directory. 
-### Output 
-- ```Strains_summary.csv``` is the csv file that summarizes the determination of the strains.
-  * The column "strain" indicates the strain determination before assigning new strain IDs. The number before "_" indicates the group, and the number after "_" indicate the strain ID inside the group.
-    For example, ```1_2``` indicates the Strain2 in Group 1. ```1_Singleton``` indicates the singleton from Group1. ```HC_Singleton``` represents the singleton inferred using ```Hierarchical_Clustering.R```
-  * The column "isolate" indicates the name of the genome.
-  * Column "new_strain_id" indicates the new strain ID after the analysis
-- ```All_Groups_Plateau.csv``` shows the number of genomes and the plateau threshold found in each of the groups.
-  * If "No Plateau Found" is shown, this means that using the given max threshold and plateau length, no plateau is found, and the max threshold is used as the threshold to determine the strains.
-- ```<GroupID>_clones_number.csv``` shows the number of clones and singletons before and after the correction by phylogenetic structure, and how many clones are broken by the public available genomes at each SNP threshold used in the analysis.
-- ```<GroupID>_stats.csv``` shows the number of discrepancy genomes at each SNP threshold used in the analysis.
-- ```<GroupID>_discrepancy clones.pdf``` visualizes the number of discrepancy genomes and clones at each SNP threshold used in the analysis.
+In both plots, sampling events are represented by dots:
+Red dots: Invasive isolates.
+Blue dots: Colonizing isolates.
 
+These visualizations help illustrate the temporal and spatial dynamics within transmission clusters.
 
-### Reference
-- [TreeTools](https://ms609.github.io/TreeTools/) 
-- [ape](https://emmanuelparadis.github.io/) 
-- [dplyr](https://github.com/tidyverse/dplyr) 
-- [cluster](https://svn.r-project.org/R-packages/trunk/cluster/) 
-- [ggplot2](https://ggplot2.tidyverse.org/) 
-- [scale](https://scales.r-lib.org/)  
+**Note: The input data is not provided as it contains sensitive patient information that cannot be shared to ensure privacy and confidentiality.**
+
+### Cluster Floorplan
+This script generates a NICU floorplan visualization(1 static and 2 animated floorplans for each cluster) to analyze patient movements in transmission dynamics. The plot highlights how proximity in time and space drives transmission events within the NICU. This visualization provides insights into spatial dynamics and helps pinpoint areas requiring targeted interventions.
+
+**Note: The input data is not provided as it contains sensitive patient information that cannot be shared to ensure privacy and confidentiality.**
+
+### Cluster plot
+This script generates visualizations to summarize transmission clusters and their characteristics:
+
+#### Cluster Representation: Each cluster is displayed as a box, colored based on invasive status:
+-  Red: Invasive clusters.
+-  Blue: Colonizing clusters.
+
+#### Annotations:
+##### Methicillin resistance status is indicated by letters: R (MRSA) or S (MSSA).
+##### Patient status is represented by dots:
+- Blue: Colonization only.
+- Red: Infection only.
+- Yellow: Both colonization and infection.
+- Individual patient IDs are shown as numbers.
+- Environmental isolates are marked by grey diamonds.
+#### Additional Details:
+Two bars below each cluster box indicate:
+- The specific NICU section where the cluster was detected.
+- The assigned treatment team at the time of detection.
+
