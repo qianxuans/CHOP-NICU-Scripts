@@ -71,7 +71,7 @@ Two bars below each cluster box indicate:
 - The specific NICU section where the cluster was detected.
 - The assigned treatment team at the time of detection.
 
-### Molecular_Clock_Analysis
+### Molecular Clock Analysis
 #### Beast2 Tree Visualization
 The script generates visualizations of BEAST2 phylogenetic trees in NEXUS format, incorporating cluster metadata. Phylogenetic trees are annotated with blue bars representing the 95% highest posterior density (HPD) interval for the time to most recent common ancestor (tMRCA).
 #### Origin Analysis Plot
