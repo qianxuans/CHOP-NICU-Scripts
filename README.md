@@ -1,4 +1,4 @@
-# 
+# CHOP NICU Staphylococcus aureus Transmission Analysis Repository
 ## Genome assembly and quality control
 Raw sequencing reads were subjected to quality control using Sunbeam (v4.3.7), which performed adapter trimming and host genome decontamination. Genome assembly was carried out using the following tools:
 
@@ -71,3 +71,9 @@ Two bars below each cluster box indicate:
 - The specific NICU section where the cluster was detected.
 - The assigned treatment team at the time of detection.
 
+### Molecular_Clock_Analysis
+#### Beast2 Tree Visualization
+The script generates visualizations of BEAST2 phylogenetic trees in NEXUS format, incorporating cluster metadata. Phylogenetic trees are annotated with blue bars representing the 95% highest posterior density (HPD) interval for the time to most recent common ancestor (tMRCA).
+#### Origin Analysis Plot
+The script creates a comparative visualization that plots cluster tMRCA against index patient admission dates. This analysis revealed the temporal dynamics of cluster emergence, specifically demonstrating that 50% of identified clusters originated from index patient admission periods.
+**Note: The input data is not provided as it contains sensitive patient information that cannot be shared to ensure privacy and confidentiality.**
