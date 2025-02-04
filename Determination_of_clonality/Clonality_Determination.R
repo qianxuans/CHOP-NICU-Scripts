@@ -164,12 +164,12 @@ group_trees <- list.files(path = group_tree_path,
                           all.files = TRUE,
                           full.names = FALSE,
                           recursive = FALSE)
-  
+
 get_determine_strains_input <- function(hierarchical_clustering_groups,
-                              group_tree_path,
-                              group_tree,
-                              study_snp_matrix_path,
-                              study_global_snp_matrix_path){
+                                        group_tree_path,
+                                        group_tree,
+                                        study_snp_matrix_path,
+                                        study_global_snp_matrix_path){
   ## Group details ----
   group_id <- as.integer(gsub("Group|\\.contree.treefile","",group_tree))
   qc_entry <- which(unlist(sapply(hierarchical_clustering_groups,
@@ -244,32 +244,32 @@ get_determine_strains_input <- function(hierarchical_clustering_groups,
                                           strain_id = NA)
            
            invisible(sapply(strain_genomes,
-                  function(genome){
-                    # Find all redundant strains involving the genome in redundant_strain_list
-                    redundant_entry <- which(sapply(redundant_strain_list,function(redundant_list) genome %in% redundant_list$genomes))
-                    # the genomes in redundant strains with redundant_entry are now considered the same strain 
-                    unique_strain_genomes <- unique(as.character(unlist(sapply(redundant_entry,
-                                                                  function(entry) redundant_strain_list[[entry]]$genomes))))
-                    # Check if any of unique_strain_genomes is already labeled with strain_id
-                    # if all are labeled, no action needed 
-                    not_labeled_unique_strain_genomes <- unique_strain_df$genome[unique_strain_df$genome %in% unique_strain_genomes & 
-                                                                                   is.na(unique_strain_df$strain_id)]
-                    
-                    if(length(not_labeled_unique_strain_genomes) > 0){
-                      if(identical(sort(unique_strain_genomes),
-                                   sort(not_labeled_unique_strain_genomes))){
-                        # if none are labeled, label all genomes in unique_strain_genomes with strain_id_index, and add 1 to strain_id_index
-                        unique_strain_df$strain_id[unique_strain_df$genome %in% unique_strain_genomes] <<- strain_id_index
-                        strain_id_index <<- strain_id_index + 1
-                      }else{
-                        # If any one of the genome is already labelled a with strain_id
-                        # the rest of the unlabeled genomes will be labeled the same strain_id
-                        # If there are multiple strain_id, use the smallest id
-                        smallest_strain_id <- min(na.omit(unique_strain_df$strain_id[unique_strain_df$genome %in% unique_strain_genomes]))
-                        unique_strain_df$strain_id[unique_strain_df$genome %in% unique_strain_genomes] <<- smallest_strain_id
-                      }
-                    }
-                  }))
+                            function(genome){
+                              # Find all redundant strains involving the genome in redundant_strain_list
+                              redundant_entry <- which(sapply(redundant_strain_list,function(redundant_list) genome %in% redundant_list$genomes))
+                              # the genomes in redundant strains with redundant_entry are now considered the same strain 
+                              unique_strain_genomes <- unique(as.character(unlist(sapply(redundant_entry,
+                                                                                         function(entry) redundant_strain_list[[entry]]$genomes))))
+                              # Check if any of unique_strain_genomes is already labeled with strain_id
+                              # if all are labeled, no action needed 
+                              not_labeled_unique_strain_genomes <- unique_strain_df$genome[unique_strain_df$genome %in% unique_strain_genomes & 
+                                                                                             is.na(unique_strain_df$strain_id)]
+                              
+                              if(length(not_labeled_unique_strain_genomes) > 0){
+                                if(identical(sort(unique_strain_genomes),
+                                             sort(not_labeled_unique_strain_genomes))){
+                                  # if none are labeled, label all genomes in unique_strain_genomes with strain_id_index, and add 1 to strain_id_index
+                                  unique_strain_df$strain_id[unique_strain_df$genome %in% unique_strain_genomes] <<- strain_id_index
+                                  strain_id_index <<- strain_id_index + 1
+                                }else{
+                                  # If any one of the genome is already labelled a with strain_id
+                                  # the rest of the unlabeled genomes will be labeled the same strain_id
+                                  # If there are multiple strain_id, use the smallest id
+                                  smallest_strain_id <- min(na.omit(unique_strain_df$strain_id[unique_strain_df$genome %in% unique_strain_genomes]))
+                                  unique_strain_df$strain_id[unique_strain_df$genome %in% unique_strain_genomes] <<- smallest_strain_id
+                                }
+                              }
+                            }))
            
            if(length(singleton_genomes) > 0){
              # Add singletons to unique_strain_df if there is any
@@ -326,7 +326,7 @@ get_determine_strains_input <- function(hierarchical_clustering_groups,
            if(length(correction_strain_tree) > 0){
              # Filter the list to keep only the strains with discrepancy between tree and gsnp
              # And only accept the correction only if the bootstrap support >= 70 (https://doi.org/10.1093/sysbio/42.2.182)
-             correction_strain_tree <- correction_strain_tree[sapply(correction_strain_tree, function(strain) strain$bootstrap_support >= 70)]
+             correction_strain_tree <- correction_strain_tree[sapply(correction_strain_tree, function(strain) ((strain$bootstrap_support >= 70) | (strain$bootstrap_support == "Root")))]
              clones_corrected <- length(correction_strain_tree)
              # The function to perform Cladebreaker to return the list of Cladebreaker-divided strains
              correction_strain_list <- lapply(correction_strain_tree,
@@ -437,23 +437,35 @@ get_determine_strains_input <- function(hierarchical_clustering_groups,
            ### Return result ----
            # Sort the output using unique_strain_df
            strain_composition <- lapply(sort(unique(unique_strain_df$strain_id)),
-                                  function(id){
-                                    list(
-                                      strain_id = id,
-                                      category = unique(unique_strain_df$category[unique_strain_df$strain_id == id]),
-                                      genome = unique_strain_df$genome[unique_strain_df$strain_id == id],
-                                      correction = unique(unique_strain_df$correction[unique_strain_df$strain_id == id]),
-                                      bootstrap_support = unique(unique_strain_df$bootstrap_support[unique_strain_df$strain_id == id])
-                                    )
-                                  })
+                                        function(id){
+                                          list(
+                                            strain_id = id,
+                                            category = unique(unique_strain_df$category[unique_strain_df$strain_id == id]),
+                                            genome = unique_strain_df$genome[unique_strain_df$strain_id == id],
+                                            correction = unique(unique_strain_df$correction[unique_strain_df$strain_id == id]),
+                                            bootstrap_support = unique(unique_strain_df$bootstrap_support[unique_strain_df$strain_id == id])
+                                          )
+                                        })
            
            # Calculate the mean/median bootstrap support for strains
            
            
-           median_strain_bootstrap_support <- median(sapply(strain_composition[sapply(strain_composition, function(x) x$category == "clone")], `[[`, "bootstrap_support"))
+           
+           median_strain_bootstrap_support <- unlist(median(sapply(strain_composition[sapply(strain_composition, function(x) x$category == "clone")], `[[`, "bootstrap_support")))
+           
+           median_strain_bootstrap_support <- ifelse(is.null(median_strain_bootstrap_support), 
+                                                     0,
+                                                     ifelse(is.na(as.numeric(median_strain_bootstrap_support)),
+                                                            0,
+                                                            as.numeric(median_strain_bootstrap_support)))
            
            mean_strain_bootstrap_support <- mean(sapply(strain_composition[sapply(strain_composition, function(x) x$category == "clone")], `[[`, "bootstrap_support"))
            
+           mean_strain_bootstrap_support <- ifelse(is.null(mean_strain_bootstrap_support), 
+                                                   0,
+                                                   ifelse(is.na(as.numeric(mean_strain_bootstrap_support)),
+                                                          0,
+                                                          as.numeric(mean_strain_bootstrap_support)))
            return(
              list(
                HC_group = group_id,
@@ -471,6 +483,7 @@ get_determine_strains_input <- function(hierarchical_clustering_groups,
            )
          })
 }
+
 
 get_determine_strains_input <- cmpfun(get_determine_strains_input)
 
