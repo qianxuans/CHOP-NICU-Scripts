@@ -5,7 +5,6 @@ library(ggplot2)
 library(here)
 # Input ----
 cluster_summary <- readRDS("cluster_summary.RDS")
-setwd(dir = "visualization/")
 tree_beast_dir <- "nexus/"
 tree_beast_list <- list.files(path = tree_beast_dir,
                               pattern = "*best.trees",
@@ -17,7 +16,7 @@ for(tree_path in tree_beast_list){
   
   cluster_id <- gsub("\\_best.trees|cluster","",basename(tree_path))
   cluster_entry <- which(sapply(cluster_summary[["clusters"]],function(cluster) cluster$cluster == cluster_id))
-  cluster_mrsd <- paste0("20",cluster_summary[["clusters"]][[cluster_entry]]$first_seen)
+  cluster_mrsd <- paste0("20",cluster_summary[["clusters"]][[cluster_entry]]$last_seen)
   
   tree_beast <- read.beast(tree_path)
   
