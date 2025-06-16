@@ -71,6 +71,18 @@ Two bars below each cluster box indicate:
 - The specific NICU section where the cluster was detected.
 - The assigned treatment team at the time of detection.
 
+
+### Spatial Distance Rescaled Phylogenetic Analysis
+#### Analysis and Visualization of Spatial Distance Rescaled Phylogeny
+The script analyzes clusters containing at least four genomes with maximum likelihood phylogenies and collection site coordinates from floor plans. The script calculates pairwise spatial distances between all genomes using the Pythagorean theorem based on collection site coordinates, generating a Naïve Spatial Distance Matrix measured in meters. A Spatial Distance Corrected Phylogeny is constructed using the nnls.tree() function from the phangorn R package. This function preserves the original ML phylogeny topology while rescaling branch lengths with spatial distances through ordinary least squares (OLS) regression to minimize residual sum of squares.The Phylogenetic Corrected Spatial Distance Matrix is computed using the cophenetic.phylo() function from the ape package, providing phylogenetically-informed spatial distances between samples. To track the spread distance accumulated over days post initial detection, samples collected each day are compared to all previously collected samples using phylogenetic corrected spatial distances. Single linkage clustering determines the minimum distance between each new isolate and all previously collected samples, representing the daily distance contribution.
+
+**Note: The input data is not provided as it contains sensitive patient information that cannot be shared to ensure privacy and confidentiality.**
+
+#### Visualization of Spatiotemporal Cluster Spread
+The script generates dual-panel visualizations showing how above clusters spread over time. The upper panel displays a line plot with daily new distances (red) and accumulated distances (green) plotted against days post initial detection. The lower panel shows a floor plan with collection locations marked by colored dots, where colors represent the number of days after initial detection. The color bar positioning corresponds to the x-axis timeframe in the upper panel, providing a direct visual connection between temporal spread and spatial distribution.
+
+**Note: The input data is not provided as it contains sensitive patient information that cannot be shared to ensure privacy and confidentiality.**
+
 ### Molecular Clock Analysis
 #### Beast2 Tree Visualization
 The script generates visualizations of BEAST2 phylogenetic trees in NEXUS format, incorporating cluster metadata. Phylogenetic trees are annotated with blue bars representing the 95% highest posterior density (HPD) interval for the time to most recent common ancestor (tMRCA).
