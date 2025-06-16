@@ -115,8 +115,8 @@ movement_treatment_plot <- function(summary_path,
                                          return(
                                            data.frame(
                                              patient = patient_entry,
-                                             collection_date = as.numeric(as.POSIXct(as.Date(paste0("20",genome_summary$collection_date[genome_summary$patientID == patient_entry])))),
-                                             status = sapply(genome_summary$genome[genome_summary$patientID == patient_entry],
+                                             collection_date = as.numeric(as.POSIXct(as.Date(paste0("20",genome_summary$collection_date[genome_summary$genome %in% genomes_patient])))),
+                                             status = sapply(genome_summary$genome[genome_summary$genome %in% genomes_patient],
                                                              function(genome)
                                                                if(grepl("marc.",genome)) "Invasive" else "Colonizing")
                                            )
