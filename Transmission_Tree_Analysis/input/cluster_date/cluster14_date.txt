@@ -1,0 +1,11 @@
+Sta.aur.bead.31	2022-02-23
+Staph.bead.13	2022-07-13
+Staph.bead.216	2022-10-12
+Staph.bead.231	2022-10-12
+Staph.beads.256	2022-11-09
+Staph.beads.298	2022-11-09
+Staph.beads.301	2022-11-09
+Staph.beads.306	2022-11-09
+Staph.beads.322	2022-12-14
+Staph.beads.323	2022-12-14
+Staph.beads.453	2023-02-15

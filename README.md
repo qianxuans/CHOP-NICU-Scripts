@@ -83,9 +83,15 @@ The script generates dual-panel visualizations showing how above clusters spread
 
 **Note: The input data is not provided as it contains sensitive patient information that cannot be shared to ensure privacy and confidentiality.**
 
-### Molecular Clock Analysis
-#### Beast2 Tree Visualization
+### Transmission Cluster Source Analysis
+#### Molecular Clock Analysis
+##### Beast2 Tree Visualization
 The script generates visualizations of BEAST2 phylogenetic trees in NEXUS format, incorporating cluster metadata. Phylogenetic trees are annotated with blue bars representing the 95% highest posterior density (HPD) interval for the time to most recent common ancestor (tMRCA).
-#### Origin Analysis Plot
-The script creates a comparative visualization that plots cluster tMRCA against index patient admission dates. This analysis revealed the temporal dynamics of cluster emergence, specifically demonstrating that 50% of identified clusters originated from index patient admission periods.
+
+#### Transmission Tree Analysis
+This script implements TransPhylo (https://pubmed.ncbi.nlm.nih.gov/28100788/) to infer transmission trees and estimate 95% confidence intervals for transmission index case dates using timed phylogenies generated using BEAST2. 
+
+###  Transmission Cluster Source Plot
+This script generates comparative visualizations plotting 95% confidence intervals of time to most recent common ancestor (tMRCA) and transmission tree index cases against index patient admission dates. The analysis estimates whether transmission clusters originated from pre-colonized patients upon admission. 
+
 **Note: The input data is not provided as it contains sensitive patient information that cannot be shared to ensure privacy and confidentiality.**

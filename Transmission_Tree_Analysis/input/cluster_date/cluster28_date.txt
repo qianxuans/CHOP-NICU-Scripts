@@ -1,0 +1,9 @@
+Staph.bead.15	2022-07-12
+Staph.bead.220	2022-10-10
+Staph.bead.25	2022-07-12
+Staph.bead.26	2022-07-12
+Staph.bead.28	2022-07-12
+Staph.bead.29	2022-07-12
+Staph.bead.30	2022-07-12
+Staph.bead.60	2022-07-14
+Staph.bead.73	2022-07-14
