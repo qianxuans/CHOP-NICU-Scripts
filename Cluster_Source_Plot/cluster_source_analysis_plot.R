@@ -291,7 +291,7 @@ get_transm_source_plot <- function(output_dir,
                                 tmrca_mean = tmrca_df$tmrca_mean[tmrca_df$cluster == cluster$cluster],
                                 tmrca_upper =  tmrca_df$tmrca_upper[tmrca_df$cluster == cluster$cluster],
                                 tmrca_lower =  tmrca_df$tmrca_lower[tmrca_df$cluster == cluster$cluster],
-                                transm_idx_mean = cluster_idx_df$transm_index_mean[cluster_idx_df$cluster == cluster$cluster],
+                                transm_idx_medoid = cluster_idx_df$transm_index_mean[cluster_idx_df$cluster == cluster$cluster],
                                 transm_idx_upper = cluster_idx_df$transm_index_upper[cluster_idx_df$cluster == cluster$cluster],
                                 transm_idx_lower = cluster_idx_df$transm_index_lower[cluster_idx_df$cluster == cluster$cluster]
                               )
@@ -341,8 +341,8 @@ get_transm_source_plot <- function(output_dir,
               color = "transparent",
               alpha = 0.75) +
     # Transmission Index mean
-    geom_segment(aes(x = transm_idx_mean,
-                     xend = transm_idx_mean,
+    geom_segment(aes(x = transm_idx_medoid,
+                     xend = transm_idx_medoid,
                      y = plot_y,
                      yend = plot_y + 0.4),
                  color = "#829825",

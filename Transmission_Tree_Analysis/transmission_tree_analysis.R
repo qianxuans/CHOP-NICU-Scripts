@@ -85,7 +85,7 @@ convert2transmission <- function(beast_tree_path,
     list(
       sum_df = data.frame(
         cluster = cluster_id,
-        transm_index_mean = cluster_index_case,
+        transm_index_medoid = cluster_index_case,
         transm_index_lower = as.numeric(cluster_index_case_ci[1]),
         transm_index_upper = as.numeric(cluster_index_case_ci[2])
       ),
