@@ -92,6 +92,17 @@ The script generates visualizations of BEAST2 phylogenetic trees in NEXUS format
 This script implements TransPhylo (https://pubmed.ncbi.nlm.nih.gov/28100788/) to infer transmission trees and estimate 95% confidence intervals for transmission index case dates using timed phylogenies generated using BEAST2. 
 
 ###  Transmission Cluster Source Plot
-This script generates comparative visualizations plotting 95% confidence intervals of time to most recent common ancestor (tMRCA) and transmission tree index cases against index patient admission dates. The analysis estimates whether transmission clusters originated from pre-colonized patients upon admission. 
+This script generates comparative visualizations plotting the time to most recent common ancestor (tMRCA) and transmission tree index cases against index patient admission dates. The analysis estimates whether transmission clusters originated from pre-colonized patients upon admission. 
 
 **Note: The input data is not provided as it contains sensitive patient information that cannot be shared to ensure privacy and confidentiality.**
+
+
+## Hidden Markov Model Analysis and Visualization
+This script applies a Hidden Markov Model (HMM) to estimate the probability of failing to detect cluster presence during
+the surveillance period (October 2021 – June 2024). Persistence periods were stratified into monthly time units. Two analyses were
+performed: (a) probability of missing positive samples at monthly time unit within the surveillance (i.e., false negatives during
+observed intervals), and (b) probability of failing to detect cluster presence outside the defined persistence period (i.e., undetected
+persistence beyond first and last positive samples). Both analyses compared colonizing versus invasive clusters. Model convergence
+was verified using multiple different starting matrices, all yielding identical estimates. Confidence intervals were generated via
+bootstrapping (B = 100).
+
