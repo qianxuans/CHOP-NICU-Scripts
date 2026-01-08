@@ -20,10 +20,6 @@ This script generates a floorplan visualization of *S. aureus* colonization surv
 - Blue dots: Positive colonizing samples (size proportional to frequency)
 - Red crosses: Bacteremia samples
 
-#### Annotations:
-- R: Methicillin-resistant *S. aureus* (MRSA)
-- S: Methicillin-susceptible *S. aureus* (MSSA)
-
 **Note: The input data is not provided as it contains sensitive patient information that cannot be shared to ensure privacy and confidentiality.**
 
 ## Determination of clonality 
