@@ -12,6 +12,20 @@ Lineage classification as "Staphylococcus (UID301)"
 
 To evaluate species-level contamination, Mash was used. Assemblies were filtered to retain only those between 2.55 Mb and 3.15 Mb in size. Of the 1,670 assembled genomes, 1,446 passed the quality control criteria and were included in downstream analyses.
 
+## NICU Surveillance and Infection Floorplan
+
+This script generates a floorplan visualization of *S. aureus* colonization surveillance and invasive infection results across the NICU (Figure 1a).
+
+#### Visualization:
+- Blue dots: Positive colonizing samples (size proportional to frequency)
+- Red crosses: Bacteremia samples
+
+#### Annotations:
+- R: Methicillin-resistant *S. aureus* (MRSA)
+- S: Methicillin-susceptible *S. aureus* (MSSA)
+
+**Note: The input data is not provided as it contains sensitive patient information that cannot be shared to ensure privacy and confidentiality.**
+
 ## Determination of clonality 
 ### Clonality Determination
 Clonality was determined using a multi-step approach:
@@ -70,6 +84,22 @@ This script generates visualizations to summarize transmission clusters and thei
 Two bars below each cluster box indicate:
 - The specific NICU section where the cluster was detected.
 - The assigned treatment team at the time of detection.
+
+### Cluster Persistence Plot
+
+This script generates visualizations of the temporal distribution of isolate sampling for transmission clusters in the NICU. Three plots are generated: all clusters (not included in manuscript), invasive clusters only (Figure 5), and clusters with environmental samples (Figure 4a).
+
+#### Persistence Representation:
+- Each cluster is displayed as a horizontal timeline, with length indicating duration from first to last detected isolate
+
+#### Annotations:
+- Colored symbols indicate isolate source:
+  - Red circles: Invasive isolates
+  - Blue circles: Colonizing isolates
+  - Grey diamonds: Environmental isolates
+- Numbers within circles indicate de-identified patient IDs
+- Text within diamonds indicates environmental sampling location
+
 
 
 ### Spatial Distance Rescaled Phylogenetic Analysis
